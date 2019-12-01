@@ -1,6 +1,6 @@
 const express = require('express');
 //load environment variables 
-const dotenv = require('dotenv').config({ path :'./config/config.env'});
+const dotenv = require('dotenv').config({ path: './config/config.env' });
 const app = express();
 
 //add some custom middleware
@@ -31,7 +31,7 @@ const users = require('./routes/users');
 const review = require('./routes/reviews');
 
 //Use Some Of Middleware 
-if(process.env.NODE_ENV === 'development'){
+if (process.env.NODE_ENV === 'development') {
     app.use(morgan('tiny'));
 }
 //File upload
@@ -42,8 +42,8 @@ app.use(helmet());
 app.use(xss());
 
 const limiter = rateLimit({
-    windowMs : 10 * 60 * 1000, //This gives 10 min
-    max : 100
+    windowMs: 10 * 60 * 1000, //This gives 10 min
+    max: 100
 });
 
 app.use(limiter);
@@ -51,26 +51,26 @@ app.use(hpp());
 app.use(cors());
 
 //Set static folder
-app.use(express.static(path.join(__dirname , 'public')))
+app.use(express.static(path.join(__dirname, 'public')))
 
 //Mount Our Routes
 app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);
-app.use('/api/v1/auth' , auth);
-app.use('/api/v1/users' , users);
-app.use('/api/v1/reviews' , review);
+app.use('/api/v1/auth', auth);
+app.use('/api/v1/users', users);
+app.use('/api/v1/reviews', review);
 app.use(errorHandler);
 const PORT = process.env.PORT || 3000
 
 //set The listening 
-const server=app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`App Running in ${process.env.NODE_ENV} mode on Port ${PORT}`.yellow.bold);
 });
 
 //Handle Unhandled Promise Rejections
-process.on('unhandledRejection' ,(error ,promise) => {
-      //log some exception
-      console.log(`Error: ${error.message}`.rainbow.bold);
-      //Close Server & Exit Process
-      server.close(()=> process.exit(1));
+process.on('unhandledRejection', (error, promise) => {
+    //log some exception
+    console.log(`Error: ${error.message}`.rainbow.bold);
+    //Close Server & Exit Process
+    server.close(() => process.exit(1));
 })
